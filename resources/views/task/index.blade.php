@@ -19,6 +19,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="task-form">
+                        <span class="text-danger" id="taskFormError">All fields are required</span>
                         <div class="row mb-3">
                             <label for="title-form" class="col-sm-2 col-form-label">Title</label>
                             <div class="col-sm-10">
@@ -31,7 +32,7 @@
                                 <input type="text" class="form-control" id="desc-form">
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-3" id="user-for-task">
                             <label for="user_for_task" class="col-sm-2 col-form-label">User</label>
                             <div class="col-sm-10">
                                 <select id="user_id" class="form-select">

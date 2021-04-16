@@ -19,6 +19,8 @@
                 </div>
                 <div class="modal-body">
                     <form id="user-form">
+                        <span class="text-danger" id="userFormError">All fields are required</span>
+
                         <div class="row mb-3">
                             <label for="firstname" class="col-sm-3 col-form-label">
                                 First Name

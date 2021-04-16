@@ -101,15 +101,17 @@
             $('#add-modal').show();
             $('#save-modal').hide();
             $('#user-form').trigger("reset");
+            $('#userFormError').hide();
         });
 
         //SHOW TASK MODAL
         $(document).on('click', '#add-task', function(e) {
             $('#task-modal').show();
-
             $('#add-task-modal').show();
             $('#save-task-modal').hide();
             $('#task-form').trigger("reset");
+            $('#taskFormError').hide();
+            $('#user-for-task').show();
         });
 
         // ADD USER
@@ -124,18 +126,16 @@
                     lastname: lastname
                 },
                 success: function(response) {
-                    if (response) {
-                        $('#add-user-modal').modal('hide');
-                        $('.user-table-container').load("/fetch_user_data",
-                            function() {
-                                $('.user-table-container').fadeIn();
-                            });
-                    } else {
-                        alert("Error occured !");
-                    }
+                    $('#add-user-modal').modal('hide');
+                    $('.user-table-container').load("/fetch_user_data",
+                        function() {
+                            $('.user-table-container').fadeIn();
+                        });
+
                 },
-                error: function(data) {
-                    console.log(data);
+                error: function(response) {
+                    $('#userFormError').show();
+
                 }
             });
 
@@ -156,15 +156,17 @@
                     user_id: user_id
                 },
                 success: function(response) {
-                    if (response) {
-                        $('#task-modal').modal('hide');
-                        $('.task-table-container').load("/fetch_task_data",
-                            function() {
-                                $('.task-table-container').fadeIn();
-                            });
-                    } else {
-                        alert("Error occured !");
-                    }
+
+                    $('#task-modal').modal('hide');
+                    $('.task-table-container').load("/fetch_task_data",
+                        function() {
+                            $('.task-table-container').fadeIn();
+                        });
+
+                },
+                error: function(response) {
+                    $('#taskFormError').show();
+
                 }
             });
 
@@ -225,6 +227,7 @@
             $('#firstname').val(firstname);
             $('#lastname').val(lastname);
             user_id = $(this).data('id');
+            $('#userFormError').hide();
         });
 
         //EDIT TASK MODAL
@@ -238,6 +241,8 @@
             $('#desc-form').val(desc);
             task_id = $(this).data('id');
             console.log(task_id)
+            $('#taskFormError').hide();
+            $('#user-for-task').hide();
         });
 
 
