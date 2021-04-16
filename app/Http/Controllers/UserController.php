@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Task;
 
-class TaskController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,17 +15,33 @@ class TaskController extends Controller
      */
     public function index()
     {
+        $data['users'] = User::orderBy('id', 'desc')->paginate(3);
         $data['tasks'] = Task::orderBy('id', 'desc')->paginate(3);
-        $data['users'] = User::all();
-        return view('task.index', $data);
+        return view('user.index', $data);
     }
 
-    public function fetch_task_data(Request $request)
+    public function fetch_user_data(Request $request)
     {
         if ($request->ajax()) {
-            $data['tasks'] = Task::orderBy('id', 'desc')->paginate(3);
-            return view('task.pagination', $data)->render();
+            $data['users'] = User::orderBy('id', 'desc')->paginate(3);
+            return view('user.pagination', $data)->render();
         }
+    }
+
+    public function fetch_user_tasks($id)
+    {
+        $user_tasks = Task::where('user_id', $id)->get();
+
+        $html = '';
+        foreach ($user_tasks as $task) {
+            $html .= '<tr>';
+            $html .= '<td>' . $task->title . '</td>';
+            $html .= '<td>' . $task->desc . '</td>';
+            $html .= '</tr>';
+        }
+
+        // echo $html;
+        return $html;
     }
 
     /**
@@ -47,13 +63,11 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required',
-            'desc' => 'required',
-            'user_id' => 'required',
+            'firstname' => 'required',
+            'lastname' => 'required',
         ]);
 
-        Task::create($request->all());
-
+        User::create($request->all());
         return response()->json(
             [
                 'success' => true,
@@ -65,10 +79,10 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Task $task)
+    public function show($id)
     {
         //
     }
@@ -76,10 +90,10 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Task  $task
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Task $task)
+    public function edit($id)
     {
         //
     }
@@ -88,14 +102,14 @@ class TaskController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Task  $task
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, User $user)
     {
-        $task->title = $request->title;
-        $task->desc = $request->desc;
-        $task->save();
+        $user->firstname = $request->firstname;
+        $user->lastname = $request->lastname;
+        $user->save();
 
         return response()->json(
             [
@@ -108,12 +122,14 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task  $task
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Task $task)
+    public function destroy(User $user)
     {
-        $task->delete();
+        $tasks = User::findOrFail($user->id)->tasks->each->delete();
+        $user->delete();
+
         return response()->json(
             [
                 'success' => true,
