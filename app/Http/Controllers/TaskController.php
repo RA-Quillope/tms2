@@ -17,6 +17,7 @@ class TaskController extends Controller
     {
         $data['tasks'] = Task::orderBy('id', 'desc')->paginate(3);
         $data['users'] = User::all();
+
         return view('task.index', $data);
     }
 
@@ -95,6 +96,7 @@ class TaskController extends Controller
     {
         $task->title = $request->title;
         $task->desc = $request->desc;
+        $task->user_id = $request->user_id;
         $task->save();
 
         return response()->json(

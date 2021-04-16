@@ -40,9 +40,10 @@ class UserController extends Controller
             $html .= '</tr>';
         }
 
-        // echo $html;
         return $html;
     }
+
+    
 
     /**
      * Show the form for creating a new resource.
