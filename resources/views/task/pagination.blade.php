@@ -17,7 +17,7 @@
                 <td>
                     <button type="button" class="btn btn-warning" id="edit-task" data-bs-toggle="modal"
                         data-bs-target="#task-modal" data-id="{{ $task->id }}" data-title="{{ $task->title }}"
-                        data-desc="{{ $task->desc }}">Edit</button>
+                        data-desc="{{ $task->desc }}" data-user_id="{{ $task->user_id }}">Edit</button>
                     <button type="button" class="btn btn-danger" id="delete-task"
                         data-id="{{ $task->id }}">Delete</button>
                 </td>

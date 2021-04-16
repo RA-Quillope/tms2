@@ -56,6 +56,7 @@
 
         let user_id;
         let task_id;
+        let user_select;
 
         $.ajaxSetup({
             headers: {
@@ -235,14 +236,19 @@
             $('#task-modal-label').text('Edit task')
             $('#add-task-modal').hide();
             $('#save-task-modal').show();
+            $('#taskFormError').hide();
             var title = $(this).data('title');
             var desc = $(this).data('desc');
             $('#title-form').val(title);
             $('#desc-form').val(desc);
             task_id = $(this).data('id');
-            console.log(task_id)
-            $('#taskFormError').hide();
-            $('#user-for-task').hide();
+            user_select = $(this).data('user_id');
+            $('#user_id').val(user_select);
+        });
+
+        //EDIT TASK MODAL USER SELECTION
+        $(document).on('click', '#user_id', function(e) {
+            user_select = $('#user_id').val();
         });
 
 
@@ -280,7 +286,8 @@
                 method: 'PATCH',
                 data: {
                     title: title,
-                    desc: desc
+                    desc: desc,
+                    user_id: user_select
                 },
                 success: function(response) {
                     if (response) {
@@ -302,7 +309,6 @@
             var firstname = $(this).data('firstname');
             var id = $(this).data("id");
             var url = $(this).data("route");
-            console.log(id)
             $('#user-tasks-label').text(firstname + "'s Tasks");
             $.ajax({
                 url: url,
